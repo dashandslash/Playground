@@ -91,9 +91,9 @@ void execute(ADefinedSystem& system)
 }
 
 template <typename T>
-void some_callback(entt::registry &r)
+void some_callback(entt::registry &r, entt::entity e)
 {
-  std::cout << "Callback for type: " << entt::type_id<T>().name() << std::endl;
+  std::cout << "Callback - Type: [" << entt::type_id<T>().name()  << "] created or modified on entity: [" << entt::to_integral(e) << "]"<< std::endl;
 }
 
 struct Context {
