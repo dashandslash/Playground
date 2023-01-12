@@ -91,7 +91,7 @@ void execute(ADefinedSystem& system)
   }
 }
 
-using Callback_data = entt::dense_map<entt::id_type, std::pair<std::string, uint32_t>>;
+using Callback_data = entt::dense_map<entt::entity, entt::dense_map<entt::id_type, std::pair<std::string, uint32_t>>>;
 
 template <typename T>
 void some_callback(entt::registry &r, entt::entity e)
@@ -99,8 +99,9 @@ void some_callback(entt::registry &r, entt::entity e)
   auto& callback_data{r.ctx().get<Callback_data>()};
   auto type_info{entt::type_id<T>()};
 
-  auto& [text, total] = callback_data[type_info.hash()];
-  
+  auto& map = callback_data[e];
+  auto& [text, total] = map[type_info.hash()];
+
   if(text.empty())
   {
     text = std::string{"Callback - Type: ["};
@@ -187,13 +188,19 @@ void update_ui(Context& ctx)
   ImGui::Begin("Callbacks");
   const auto& callback_data{r.ctx().get<Callback_data>()};
 
-  for(auto [key, info] : callback_data)
+  for(auto&& [e, map] : callback_data)
   {
-    const auto& [text, total] = info;
-    ImGui::PushID(entt::to_integral(key));
-    ImGui::Text("%s", text.c_str());
-    ImGui::SameLine();
-    ImGui::Text("Total callbacks: %i", total);
+    ImGui::PushID(entt::to_integral(e));
+    for (auto&& [hash, info] : map) {
+      const auto& [text, total] = info;
+      ImGui::PushID(entt::to_integral(hash));
+      ImGui::Text("Entity %i", entt::to_integral(e));
+      ImGui::SameLine();
+      ImGui::Text("%s", text.c_str());
+      ImGui::SameLine();
+      ImGui::Text("Total callbacks: %i", total);
+      ImGui::PopID();
+    }
     ImGui::PopID();
   }
   ImGui::End();
