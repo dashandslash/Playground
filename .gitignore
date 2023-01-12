@@ -1,0 +1,14 @@
+## OSX artifacts
+.DS_Store
+**/.DS_Store
+
+.build*/
+.external/
+.vs/
+.vscode/
+.clang-format
+_external
+_build*/
+
+/blackboard/.external
+/blackboard/_external

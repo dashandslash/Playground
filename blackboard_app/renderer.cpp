@@ -1,0 +1,71 @@
+#include "renderer.h"
+
+#include "platform/imgui_impl_sdl_bgfx.h"
+#include "window.h"
+
+#include <SDL/SDL.h>
+#include <SDL/SDL_syswm.h>
+#include <bgfx/bgfx.h>
+#include <bgfx/platform.h>
+#include <imgui/backends/imgui_impl_sdl.h>
+
+#include <iostream>
+#include <utility>
+
+namespace blackboard::app {
+namespace renderer {
+
+bool init(Window &window, Api &renderer_api, const uint16_t width, const uint16_t height)
+{
+  //    SDL_SysWMinfo wmi;
+  //    SDL_VERSION(&wmi.version);
+  //    if (!SDL_GetWindowWMInfo(window.window, &wmi))
+  //    {
+  //        std::cout << "SDL_SysWMinfo could not be retrieved. SDL_Error: " <<
+  //        SDL_GetError() << std::endl; return false;
+  //    }
+  bgfx::Init bgfx_init;
+  bgfx::renderFrame();    // single threaded mode
+  switch (renderer_api)
+  {
+    case Api::METAL:
+      bgfx_init.type = bgfx::RendererType::Metal;    // auto choose renderer
+      break;
+    case Api::D3D11:
+      bgfx_init.type = bgfx::RendererType::Direct3D11;    // auto choose renderer
+      break;
+    case Api::WEBGL:
+      bgfx_init.type = bgfx::RendererType::OpenGL;    // auto choose renderer
+      break;
+    default:
+      bgfx_init.type = bgfx::RendererType::Count;    // auto choose renderer
+      break;
+  }
+  const auto [drawable_width, drawable_height] = window.get_size_in_pixels();
+  bgfx_init.resolution.width = drawable_width;
+  bgfx_init.resolution.height = drawable_height;
+  bgfx_init.resolution.numBackBuffers = 1;
+  bgfx_init.resolution.reset = BGFX_RESET_VSYNC | BGFX_RESET_HIDPI | BGFX_RESET_MSAA_X4;
+  bgfx_init.platformData.nwh = renderer::native_window_handle(window.window);
+  bgfx::init(bgfx_init);
+
+  bgfx::setDebug(BGFX_DEBUG_TEXT);
+  bgfx::setViewClear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x000000FF, 1.0f, 0);
+  bgfx::setViewRect(0, 0, 0, drawable_width, drawable_height);
+
+  switch (bgfx::getRendererType())
+  {
+    case bgfx::RendererType::Direct3D11:
+      renderer_api = Api::D3D11;
+      break;
+    case bgfx::RendererType::Metal:
+      renderer_api = Api::METAL;
+      break;
+    default:
+      break;
+  }
+
+  return true;
+}
+}    // namespace renderer
+}    // namespace blackboard::app
