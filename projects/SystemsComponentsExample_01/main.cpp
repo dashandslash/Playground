@@ -145,7 +145,7 @@ void update_ui(Context& ctx)
     ImGui::SameLine();
     ImGui::Text("C1 value");
     ImGui::SameLine();
-    ImGui::PushItemWidth(80.0f); // -1 sets width to fit the available space
+    ImGui::PushItemWidth(80.0f);
     if(ImGui::InputFloat("##C1_value", &c1.v))
     {
       // Calling patch triggers the callback.
