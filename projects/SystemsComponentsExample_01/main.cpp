@@ -91,10 +91,26 @@ void execute(ADefinedSystem& system)
   }
 }
 
+using Callback_data = entt::dense_map<entt::id_type, std::pair<std::string, uint32_t>>;
+
 template <typename T>
 void some_callback(entt::registry &r, entt::entity e)
 {
-  std::cout << "Callback - Type: [" << entt::type_id<T>().name()  << "] created or modified on entity: [" << entt::to_integral(e) << "]"<< std::endl;
+  auto& callback_data{r.ctx().get<Callback_data>()};
+  auto type_info{entt::type_id<T>()};
+
+  auto& [text, total] = callback_data[type_info.hash()];
+  
+  if(text.empty())
+  {
+    text = std::string{"Callback - Type: ["};
+    text.append(std::string{entt::type_id<T>().name()});
+    text.append("] created or modified on entity: [");
+    text.append(std::to_string(entt::to_integral(e)));
+    text.append("]");
+  }
+  
+  total++;
 }
 
 blackboard::app::App app{"SystemsComponentsExample_01", blackboard::app::renderer::Api::AUTO};
@@ -111,6 +127,7 @@ void init(Context& ctx)
   blackboard::app::gui::load_font(blackboard::app::resources::path() / "assets/fonts/Inter/Inter-Light.otf", 12.0f,
                                   dpi);
   auto& r = ctx.r;
+  r.ctx().emplace<Callback_data>();
   // There are two ways to register a listener on a specific component
   // Using the sigh storage mixin
   r.storage<C1>().on_construct().connect<some_callback<C1>>();
@@ -127,16 +144,16 @@ void update_ui(Context& ctx)
 {
   blackboard::app::gui::dockspace();
   ImGui::Begin("Demo");
-  
+
   auto& r = ctx.r;
   auto &storageC1 = r.storage<C1>();
   auto &storageC2 = r.storage<C2>();
-  
+
   if(ImGui::Button("Add"))
   {
     storageC1.emplace(r.create(), (float)(std::rand()%100u));
   }
-  
+
   entt::basic_view c1_c2_view{storageC1, storageC2};
   for(auto [e, c1, c2] : c1_c2_view.each())
   {
@@ -156,6 +173,20 @@ void update_ui(Context& ctx)
     ImGui::PopItemWidth();
     ImGui::SameLine();
     ImGui::Text("C2 value %f", c2.v);
+    ImGui::PopID();
+  }
+  ImGui::End();
+  
+  ImGui::Begin("Callbacks");
+  const auto& callback_data{r.ctx().get<Callback_data>()};
+
+  for(auto [key, info] : callback_data)
+  {
+    const auto& [text, total] = info;
+    ImGui::PushID(entt::to_integral(key));
+    ImGui::Text("%s", text.c_str());
+    ImGui::SameLine();
+    ImGui::Text("Total callbacks: %i", total);
     ImGui::PopID();
   }
   ImGui::End();
