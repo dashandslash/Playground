@@ -6,7 +6,7 @@ project(SystemsComponentsExample_01)
 FetchContent_Declare(
         EnTT
         GIT_REPOSITORY https://github.com/skypjack/entt.git
-        GIT_TAG v3.10.1
+        GIT_TAG v3.11.1
 )
 FetchContent_MakeAvailable(EnTT)
 set(ENTT_INCLUDE_HEADERS true)
