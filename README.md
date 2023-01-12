@@ -1,3 +1,14 @@
+# Playground
+
+This is a playground repo for testing and prototyping.
+
+To build:
+
+- `mkdir _build && cd _build`
+- `cmake .. -G [Xcode, "Visual Studio 17 2022", Ninja...] -DCMAKE_BUILD_TYPE=Debug` this step will take couple of minutes as all the dependencies will be fetched and some will be built
+- `cmake --build . --target NewProjectName -j` (or by using Xcode/Visual Studio)
+
+
 # blackboard_app
 
 Blackboard App is a combination of SDL2, BGFX and IMGUI as base to create a desktop application (potentially also WebAssembly) with a user inteterface and a gpu rendering context.
