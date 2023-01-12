@@ -4,6 +4,7 @@
 
 #include <entt/core/type_traits.hpp>
 #include <entt/entity/registry.hpp>
+#include <entt/entity/observer.hpp>
 #include <imgui/imgui.h>
 
 #include <blackboard_app/app.h>
@@ -96,16 +97,15 @@ void some_callback(entt::registry &r, entt::entity e)
   std::cout << "Callback - Type: [" << entt::type_id<T>().name()  << "] created or modified on entity: [" << entt::to_integral(e) << "]"<< std::endl;
 }
 
+blackboard::app::App app{"SystemsComponentsExample_01", blackboard::app::renderer::Api::AUTO};
+
 struct Context {
-  blackboard::app::App &app;
-  entt::registry r;
+  entt::registry r{};
   ADefinedSystem definedSystem = make_system<ADefinedSystem>(r);
 };
 
 void init(Context& ctx)
 {
-  auto& app = ctx.app;
-  
   blackboard::app::gui::set_blackboard_theme();
   const auto dpi{app.main_window.get_ddpi()};
   blackboard::app::gui::load_font(blackboard::app::resources::path() / "assets/fonts/Inter/Inter-Light.otf", 12.0f,
@@ -172,11 +172,10 @@ void app_update(Context& ctx)
 
 int main(int argc, char *argv[])
 {
-  blackboard::app::App blackboardApp{"SystemsComponentsExample_01", blackboard::app::renderer::Api::AUTO};
-  Context ctx{.app = blackboardApp};
-  blackboardApp.on_update = [&ctx](){app_update(ctx);};
-  blackboardApp.on_init = [&ctx](){init(ctx);};
-  blackboardApp.run();
+  Context ctx{};
+  app.on_update = [&ctx](){app_update(ctx);};
+  app.on_init = [&ctx](){init(ctx);};
+  app.run();
 
   return 0;
 }
