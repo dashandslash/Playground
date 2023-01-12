@@ -148,12 +148,19 @@ void update_ui(Context& ctx)
   auto& r = ctx.r;
   auto &storageC1 = r.storage<C1>();
   auto &storageC2 = r.storage<C2>();
+  
+  static float c1_value{0.0f};
+  
+  ImGui::PushItemWidth(80.0f);
+  ImGui::InputFloat("C1 value", &c1_value);
+  ImGui::PopItemWidth();
+  ImGui::SameLine();
 
-  if(ImGui::Button("Add"))
+  if(ImGui::Button("Create entity"))
   {
-    storageC1.emplace(r.create(), (float)(std::rand()%100u));
+    storageC1.emplace(r.create(), c1_value);
   }
-
+  
   entt::basic_view c1_c2_view{storageC1, storageC2};
   for(auto [e, c1, c2] : c1_c2_view.each())
   {
