@@ -69,9 +69,9 @@ using ADefinedSystem = System<entt::type_list<C1>, entt::type_list<C2>>;
 
 void execute(ADefinedSystem& system)
 {
-  entt::basic_view v1{get_read_storage<C1>(system)};
+  entt::basic_view c1_view{get_read_storage<C1>(system)};
   
-  for(const auto [e, c1] : v1.each())
+  for(const auto [e, c1] : c1_view.each())
   {
     auto& storageC2{get_write_storage<C2>(system)};
     
@@ -137,8 +137,8 @@ void update_ui(Context& ctx)
     storageC1.emplace(r.create(), (float)(std::rand()%100u));
   }
   
-  entt::basic_view vv{storageC1, storageC2};
-  for(auto [e, c1, c2] : vv.each())
+  entt::basic_view c1_c2_view{storageC1, storageC2};
+  for(auto [e, c1, c2] : c1_c2_view.each())
   {
     ImGui::PushID(entt::to_integral(e));
     ImGui::Text("Entity %i", entt::to_integral(e));
