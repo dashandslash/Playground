@@ -32,8 +32,6 @@ std::tuple<const entt::sigh_storage_mixin<entt::storage<ReadTs>>&...> readStorag
 std::tuple<entt::sigh_storage_mixin<entt::storage<WriteTs>>&...> writeStorage;
 };
 
-using ADefinedSystem = System<entt::type_list<C1>, entt::type_list<C2>>;
-
 namespace internal {
 
 template<typename C, typename... Ts>
@@ -66,6 +64,8 @@ auto get_write_storage(auto&& system) -> entt::sigh_storage_mixin<entt::storage<
 {
   return std::get<entt::sigh_storage_mixin<entt::storage<T>>&>(system.writeStorage);
 }
+
+using ADefinedSystem = System<entt::type_list<C1>, entt::type_list<C2>>;
 
 void execute(ADefinedSystem& system)
 {
