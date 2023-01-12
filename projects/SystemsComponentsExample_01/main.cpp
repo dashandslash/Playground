@@ -113,7 +113,7 @@ void some_callback(entt::registry &r, entt::entity e)
   total++;
 }
 
-blackboard::app::App app{"SystemsComponentsExample_01", blackboard::app::renderer::Api::AUTO};
+std::unique_ptr<blackboard::app::App> app;
 
 struct Context {
   entt::registry r{};
@@ -123,7 +123,7 @@ struct Context {
 void init(Context& ctx)
 {
   blackboard::app::gui::set_blackboard_theme();
-  const auto dpi{app.main_window.get_ddpi()};
+  const auto dpi{app->main_window.get_ddpi()};
   blackboard::app::gui::load_font(blackboard::app::resources::path() / "assets/fonts/Inter/Inter-Light.otf", 12.0f,
                                   dpi);
   auto& r = ctx.r;
@@ -210,10 +210,13 @@ void app_update(Context& ctx)
 
 int main(int argc, char *argv[])
 {
-  Context ctx{};
-  app.on_update = [&ctx](){app_update(ctx);};
-  app.on_init = [&ctx](){init(ctx);};
-  app.run();
+  app = std::make_unique<blackboard::app::App>("SystemsComponentsExample_01", blackboard::app::renderer::Api::AUTO);
 
+  Context ctx{};
+  app->on_update = [&ctx](){app_update(ctx);};
+  app->on_init = [&ctx](){init(ctx);};
+  app->run();
+
+  app.reset();
   return 0;
 }
