@@ -78,6 +78,9 @@ void update_ui(Context& ctx)
 {
   blackboard::app::gui::dockspace();
   ImGui::Begin("Demo");
+  
+  ImGui::TextColored({1.0, 0.0, 0.0, 1.0}, "System_A: C2 = C1 + 1.0f");
+  ImGui::TextColored({1.0, 0.0, 0.0, 1.0}, "System_B: C3 = C1 + C2");
 
   auto& r = ctx.r;
   auto &storageC1 = r.storage<C1>();
