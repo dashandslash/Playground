@@ -1,1 +1,2 @@
 add_subdirectory(SystemsComponentsExample_01 ${CMAKE_CURRENT_BINARY_DIR}/SystemsComponentsExample_01)
+add_subdirectory(SystemsComponentsExample_02 ${CMAKE_CURRENT_BINARY_DIR}/SystemsComponentsExample_02)
