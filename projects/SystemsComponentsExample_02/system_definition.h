@@ -25,14 +25,14 @@ struct System_info<ObserversT, entt::type_list<ReadTs...>, entt::type_list<Write
 
 namespace internal {
   template <typename SystemInfoT, typename... ReadTs, typename... WriteTs>
-  auto make_system_info(entt::registry& r, entt::type_list<ReadTs...>&&, entt::type_list<WriteTs...>&&) {
+  auto make_system(entt::registry& r, entt::type_list<ReadTs...>&&, entt::type_list<WriteTs...>&&) {
     return SystemInfoT{ .observers = std::make_unique<typename SystemInfoT::Observers>(r), .readStorages = {r.storage<ReadTs>()...}, .writeStorage = {r.storage<WriteTs>()...}};
   }
 }
 
 template <typename SystemInfoT>
-SystemInfoT make_system_info(entt::registry& r) {
-  return internal::make_system_info<SystemInfoT>(r, SystemInfoT::Read_type_list(), SystemInfoT::Write_type_list());
+SystemInfoT make_system(entt::registry& r) {
+  return internal::make_system<SystemInfoT>(r, SystemInfoT::Read_type_list(), SystemInfoT::Write_type_list());
 }
 
 template<typename T>
