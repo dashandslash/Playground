@@ -59,18 +59,6 @@ private:
       ::update(system_info, delta_t);
     }
 
-    template<typename T>
-    auto get_read_storage() -> const entt::sigh_storage_mixin<entt::storage<T>>&
-    {
-      return get_read_storage<T>(system_info);
-    }
-
-    template<typename T>
-    auto get_write_storage() -> entt::sigh_storage_mixin<entt::storage<T>>&
-    {
-      return get_write_storage<T>(system_info);
-    }
-
     SystemInfoT system_info;
   };
 
