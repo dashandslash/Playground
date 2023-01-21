@@ -15,17 +15,24 @@ struct System_info;
 template<typename ObserversT, typename... ReadTs, typename... WriteTs>
 struct System_info<ObserversT, entt::type_list<ReadTs...>, entt::type_list<WriteTs...>>{
 
-  std::unique_ptr<ObserversT> observers;
-
-  using read_type_list = entt::type_list<ReadTs...>;
-  using write_type_list = entt::type_list<WriteTs...>;
+  using Observers = ObserversT;
+  using Read_type_list = entt::type_list<ReadTs...>;
+  using Write_type_list = entt::type_list<WriteTs...>;
+  std::unique_ptr<Observers> observers;
   std::tuple<const entt::sigh_storage_mixin<entt::storage<ReadTs>>&...> readStorages;
   std::tuple<entt::sigh_storage_mixin<entt::storage<WriteTs>>&...> writeStorage;
 };
 
-template <typename SystemInfoT, typename ObserversT, typename... ReadTs, typename... WriteTs>
-auto make_system_info(entt::registry& r, entt::type_list<ReadTs...>&&, entt::type_list<WriteTs...>&&) {
-  return SystemInfoT{ std::make_unique<ObserversT>(r), {r.storage<ReadTs>()...}, { r.storage<WriteTs>()...} };
+namespace internal {
+  template <typename SystemInfoT, typename... ReadTs, typename... WriteTs>
+  auto make_system_info(entt::registry& r, entt::type_list<ReadTs...>&&, entt::type_list<WriteTs...>&&) {
+    return SystemInfoT{ .observers = std::make_unique<typename SystemInfoT::Observers>(r), .readStorages = {r.storage<ReadTs>()...}, .writeStorage = {r.storage<WriteTs>()...}};
+  }
+}
+
+template <typename SystemInfoT>
+SystemInfoT make_system_info(entt::registry& r) {
+  return internal::make_system_info<SystemInfoT>(r, SystemInfoT::Read_type_list(), SystemInfoT::Write_type_list());
 }
 
 template<typename T>

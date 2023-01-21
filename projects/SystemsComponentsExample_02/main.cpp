@@ -44,8 +44,8 @@ std::unique_ptr<blackboard::app::App> app;
 
 struct Context {
   entt::registry r{};
-  System system_a = System(make_system_info<System_A_info, System_A_observer>(r, System_A_read_typelist{}, System_A_write_typelist{}));
-  System system_b = System(make_system_info<System_B_info, System_B_observer>(r, System_B_read_typelist{}, System_B_write_typelist{}));
+  System system_a = make_system_info<System_A_info>(r);
+  System system_b = make_system_info<System_B_info>(r);
 };
 
 void execute_systems(Context& ctx)
