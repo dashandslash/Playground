@@ -48,7 +48,6 @@ private:
       virtual void update(const float delta_t) = 0;
   };
 
-public:
   template<typename SystemInfoT>
   struct System_model : public System_concept
   {
@@ -74,7 +73,8 @@ public:
 
     SystemInfoT system_info;
   };
-  
+
+public:
   template<typename SystemInfoT>
   System(SystemInfoT&& system_info)
   : p_impl{std::make_unique<System_model<SystemInfoT>>(std::move(system_info))}
@@ -85,26 +85,6 @@ public:
     p_impl->update(delta_t);
   }
 
-  //template<typename T>
-  //auto get_read_storage() -> const entt::sigh_storage_mixin<entt::storage<T>>&
-  //{
-  //  return p_impl->get_read_storage<T>();
-  //}
-
-  //template<typename T>
-  //auto get_write_storage() -> entt::sigh_storage_mixin<entt::storage<T>>&
-  //{
-  //  return p_impl->get_write_storage<T>();
-  //}
-
-
 private:
   std::unique_ptr<System_concept> p_impl;
 };
-
-//template<typename T>
-//inline void update(T&& system, const float delta_t)
-//{
-//  (void)system;
-//}
-
