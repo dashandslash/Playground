@@ -12,10 +12,10 @@
 #include <blackboard_app/resources.h>
 #include <blackboard_app/window.h>
 
-#include "system_definition.h"
+
 #include "system_a.h"
 #include "system_b.h"
-
+#include "system_definition.h"
 
 using Callback_data = entt::dense_map<entt::entity, entt::dense_map<entt::id_type, std::pair<std::string, uint32_t>>>;
 
@@ -44,8 +44,8 @@ std::unique_ptr<blackboard::app::App> app;
 
 struct Context {
   entt::registry r{};
-  System system_a = System(r, std::make_unique<System_A_observer>(r), System_A_read_typelist{}, System_A_write_typelist{});
-  System system_b = System(r, std::make_unique<System_B_observer>(r), System_B_read_typelist{}, System_B_write_typelist{});
+  System system_a = System(make_system_info<System_A_info, System_A_observer>(r, System_A_read_typelist{}, System_A_write_typelist{}));
+  System system_b = System(make_system_info<System_B_info, System_B_observer>(r, System_B_read_typelist{}, System_B_write_typelist{}));
 };
 
 void execute_systems(Context& ctx)

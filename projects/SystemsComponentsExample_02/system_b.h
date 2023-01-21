@@ -22,28 +22,4 @@ struct System_B_observer
 using System_B_read_typelist = entt::type_list<C1, C2>;
 using System_B_write_typelist = entt::type_list<C3>;
 
-using System_B = System::System_model<System_B_observer, System_B_read_typelist, System_B_write_typelist>;
-
-template<> void update(System_B& system, float)
-{
-  for(const auto e : system.observers->obs)
-  {
-    auto& storageC3{get_write_storage<C3>(system)};
-    
-    auto& c1 = get_read_storage<C1>(system).get(e);
-    auto& c2 = get_read_storage<C2>(system).get(e);
-
-    if(storageC3.contains(e))
-    {
-      storageC3.patch(e, [&](auto& c3){
-        c3.v = c1.v + c2.v;
-      });
-    }
-    else
-    {
-      storageC3.emplace(e, c1.v + c2.v);
-    }
-  }
-  
-  system.observers->obs.clear();
-}
+using System_B_info = System_info<System_B_observer, System_B_read_typelist, System_B_write_typelist>;
