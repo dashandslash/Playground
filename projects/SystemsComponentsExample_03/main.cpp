@@ -95,15 +95,6 @@ void init(Context& ctx)
   register_system_to_graph(ctx.system_b, ctx.flow);
 
   entt::adjacency_matrix<entt::directed_tag> graph = ctx.flow.graph();
-  for(const auto &[_0, _1]: graph.edges() ) {
-      auto _0s = "task_system_a"_hs;
-      auto _1s = "task_system_b"_hs;
-
-      std::cout << ctx.flow[_0] << " - " << ctx.flow[_1] << std::endl;
-      std::cout << _0s.value() << " - " << _1s.value() << std::endl;
-      std::cout << _0s.data() << " - " << _1s.data() << std::endl;
-      std::cout << ctx.system_a.type_info.name() << " - " << ctx.system_a.type_info.hash() << std::endl;
-  }
 }
 
 void update_ui(Context& ctx)
@@ -175,6 +166,21 @@ void update_ui(Context& ctx)
     ImGui::PopID();
   }
   ImGui::End();
+  
+  ImGui::Begin("Graph");
+  
+  ImGui::Text("System type_info: name[%s] hash[%u]", ctx.system_a.type_info.name().data(), ctx.system_a.type_info.hash());
+  ImGui::Text("System type_info: name[%s] hash[%u]", ctx.system_b.type_info.name().data(), ctx.system_b.type_info.hash());
+  ImGui::Separator();
+  ImGui::Text("Graph has %u nodes", static_cast<uint32_t>(ctx.flow.graph().size()));
+  ImGui::Text("With the following nodes:");
+  uint32_t idx{0u};
+  for(const auto &[_0, _1]: ctx.flow.graph().edges() ) {
+      ImGui::Text("Node #%u adjacency edge: hash[%u] -> hash[%u]", idx, ctx.flow[_0], ctx.flow[_1]);
+  }
+
+  ImGui::End();
+  
 }
 
 void app_update(Context& ctx)
