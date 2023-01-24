@@ -28,7 +28,7 @@ namespace internal {
   struct make_system;
   template <typename SystemInfoT, typename... ReadTs, typename... WriteTs>
   struct make_system<SystemInfoT, entt::type_list<ReadTs...>, typename entt::type_list<WriteTs...>> {
-    SystemInfoT create(entt::registry& r)
+    inline static SystemInfoT create(entt::registry& r)
     {
       return SystemInfoT{ .observers = std::make_unique<typename SystemInfoT::Observers>(r), .readStorages = {r.storage<ReadTs>()...}, .writeStorage = {r.storage<WriteTs>()...}};
     }
@@ -37,7 +37,7 @@ namespace internal {
 
 template <typename SystemInfoT>
 SystemInfoT make_system(entt::registry& r) {
-  internal::make_system<SystemInfoT, typename SystemInfoT::Read_type_list, typename SystemInfoT::Write_type_list>{}.create(r);
+  internal::make_system<SystemInfoT, typename SystemInfoT::Read_type_list, typename SystemInfoT::Write_type_list>::create(r);
 }
 
 template<typename T>
