@@ -37,7 +37,7 @@ namespace internal {
 
 template <typename SystemInfoT>
 SystemInfoT make_system(entt::registry& r) {
-  internal::make_system<SystemInfoT, typename SystemInfoT::Read_type_list, typename SystemInfoT::Write_type_list>::create(r);
+  return internal::make_system<SystemInfoT, typename SystemInfoT::Read_type_list, typename SystemInfoT::Write_type_list>::create(r);
 }
 
 template<typename T>
