@@ -11,8 +11,6 @@
 #include "system_definition.h"
 
 
-// This system sums C1 and C2 and store the result in C3
-
 struct System_B_observer
 {
   System_B_observer(entt::registry& r) : obs{r, entt::collector.group<C1, C2>().update<C1>().where<C2>().update<C2>().where<C1>()}{}

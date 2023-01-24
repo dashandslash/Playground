@@ -10,7 +10,6 @@
 #include "components.h"
 #include "system_definition.h"
 
-// This system sums 1.0f to C1 and stores it into C2
 
 struct System_A_observer
 {

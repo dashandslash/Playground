@@ -11,7 +11,7 @@
 #include "components.h"
 #include "system_definition.h"
 
-
+// This system sums 1.0f to C1 and stores it into C2
 template<>
 void update(System_A_info& system, const float delta_t)
 {
